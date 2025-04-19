@@ -1,9 +1,13 @@
-streamlit
+ipykernel
 pandas
 numpy
 matplotlib
 plotly
 seaborn
+scikit-learn==1.5.1
+pymongo
+from_root
+dill
 certifi
 PyYAML
 boto3
@@ -14,14 +18,4 @@ python-multipart
 uvicorn
 jinja2
 imblearn
-xgboost
-missingno
-statsmodels
-ipykernel
-scikit-learn==1.5.1
-pymongo
-from_root
-dill
-certifi
 streamlit-option-menu
--e .
