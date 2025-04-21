@@ -11,12 +11,13 @@ from src.logger import logging
 from src.diseases.diabetes.data_access.diabetes_data import Diabetes_Data
 
 class DataIngestion:
-    def __init__(self, disease_name: str):
+    def __init__(self,data_ingestion_config: DataIngestionConfig, disease_name: str):
         """
         :param disease_name: Name of the disease (diabetes, heart_disease, kidney_disease)
         """
         try:
-            self.data_ingestion_config = DataIngestionConfig(disease_name=disease_name)
+            self.data_ingestion_config = data_ingestion_config
+            self.disease_name = disease_name
         except Exception as e:
             raise MyException(e, sys)
         
@@ -104,7 +105,7 @@ class DataIngestion:
             )
 
             data_ingestion_artifact = DataIngestionArtifact(feature_store_file_path=self.data_ingestion_config.feature_store_file_path,trained_file_path=self.data_ingestion_config.training_file_path,
-            test_file_path=self.data_ingestion_config.testing_file_path)
+            test_file_path=self.data_ingestion_config.testing_file_path,disease_name=self.disease_name)
             
             logging.info(f"Data ingestion artifact: {data_ingestion_artifact}")
             return data_ingestion_artifact

@@ -1,0 +1,99 @@
+columns: 
+  - id: int
+  - age: float
+  - bp: float
+  - sg: float
+  - al: float
+  - su: float
+  - rbc: object
+  - pc: object
+  - pcc: object
+  - ba: object
+  - bgr: float64
+  - bu: float64
+  - sc: float64
+  - sod: float64
+  - pot: float64
+  - hemo: float64
+  - pcv: object
+  - wc: object
+  - rc: object
+  - htn: object
+  - dm: object
+  - cad: object
+  - appet: object
+  - pe: object
+  - ane: object
+  - classification: object
+
+
+numerical_columns:
+  - id
+  - age
+  - bp
+  - sg
+  - al
+  - su
+  - bgr
+  - bu
+  - sc
+  - sod
+  - pot
+  - hemo
+  - pcv
+  - wc
+  - rc
+
+categorical_columns:
+  - rbc
+  - pc
+  - pcc
+  - ba
+  - htn
+  - dm
+  - cad
+  - appet
+  - pe
+  - ane
+  - classification
+
+
+drop_columns: 
+  - id
+
+# for data transformation
+robust_scaler_columns:
+  - Pregnancies
+  - BloodPressure
+  - SkinThickness
+  - DiabetesPedigreeFunction
+  - Age
+  - BMI
+  - Insulin
+  - Glucose
+
+standard_scaler_columns:
+  - Pregnancies
+  - BloodPressure
+  - SkinThickness
+  - DiabetesPedigreeFunction
+  - Age
+  - BMI
+  - Insulin
+  - Glucose
+
+
+columns_to_replace_zeros:
+  - Pregnancies
+  - Glucose
+  - BloodPressure
+  - SkinThickness
+  - Insulin
+  - BMI
+  - DiabetesPedigreeFunction
+  - Age
+
+columns_to_apply_one_hot_encoding:
+  - NewBMI
+  - NewInsulinScore
+  - NewGlucose

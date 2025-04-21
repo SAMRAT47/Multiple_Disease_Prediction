@@ -48,8 +48,8 @@ class Kidney_Data:
             print("Fetching data from mongoDB")
             kidney_df = pd.DataFrame(list(collection.find()))
             print(f"Data fecthed with len: {len(kidney_df)}")
-            if "id" in kidney_df.columns.to_list():
-                kidney_df = kidney_df.drop(columns=["id"], axis=1)
+            if "_id" in kidney_df.columns.to_list():
+                kidney_df = kidney_df.drop(columns=["_id"], axis=1)
             kidney_df.replace({"na":np.nan},inplace=True)
             return kidney_df
 

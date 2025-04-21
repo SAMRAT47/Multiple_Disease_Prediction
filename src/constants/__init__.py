@@ -12,7 +12,9 @@ MODEL_FILE_NAME = "model.pkl"
 TARGET_COLUMN = "Outcome"
 CURRENT_YEAR = date.today().year
 PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
-SCHEMA_FILE_PATH = os.path.join("config", "schema.yaml")
+
+def get_schema_file_path(disease_name: str) -> str:
+    return os.path.join("src", "diseases", disease_name.lower(), "config", "schema.yaml")
 
 AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
 AWS_SECRET_ACCESS_KEY_ENV_KEY = "AWS_SECRET_ACCESS_KEY"

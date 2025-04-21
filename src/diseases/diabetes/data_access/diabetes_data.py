@@ -48,8 +48,8 @@ class Diabetes_Data:
             print("Fetching data from mongoDB")
             diabetes_df = pd.DataFrame(list(collection.find()))
             print(f"Data fecthed with len: {len(diabetes_df)}")
-            if "id" in diabetes_df.columns.to_list():
-                diabetes_df = diabetes_df.drop(columns=["id"], axis=1)
+            if "_id" in diabetes_df.columns.to_list():
+                diabetes_df = diabetes_df.drop(columns=["_id"], axis=1)
             diabetes_df.replace({0:np.nan},inplace=True)
             return diabetes_df
 

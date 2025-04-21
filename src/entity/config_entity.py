@@ -3,22 +3,34 @@ from dataclasses import dataclass
 from datetime import datetime
 from src.constants import *
 
-TIMESTAMP: str = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
 
+# Generate the timestamp for artifact directories
+TIMESTAMP: str = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
 
 @dataclass
 class TrainingPipelineConfig:
+    """
+    Configuration for the training pipeline.
+    """
     pipeline_name: str = ""  # You can set a dynamic pipeline name if needed.
     artifact_dir: str = os.path.join("artifact", TIMESTAMP)
     timestamp: str = TIMESTAMP
 
 
+# Initialize the pipeline config
 training_pipeline_config: TrainingPipelineConfig = TrainingPipelineConfig()
 
 
+@dataclass
 class DataIngestionConfig:
+    """
+    Configuration for data ingestion.
+    """
     def __init__(self, disease_name: str):
+        # Fetch the disease-specific configuration from DISEASES dictionary
         disease_config = DISEASES.get(disease_name, {})
+        if not disease_config:
+            raise ValueError(f"Invalid disease name '{disease_name}'")
 
         self.disease_name = disease_name
         self.file_name = disease_config.get("file_name", "default.csv")
@@ -37,12 +49,15 @@ class DataIngestionConfig:
         self.training_file_path = os.path.join(self.data_ingestion_dir, "dataset", self.train_file_name)
         self.testing_file_path = os.path.join(self.data_ingestion_dir, "dataset", self.test_file_name)
 
-        # Split ratio
+        # Split ratio for training and testing
         self.train_test_split_ratio = 0.2
 
 
 @dataclass
 class DataValidationConfig:
+    """
+    Configuration for data validation.
+    """
     data_validation_dir: str
     validation_report_file_path: str
 
@@ -53,6 +68,9 @@ class DataValidationConfig:
 
 @dataclass
 class DataTransformationConfig:
+    """
+    Configuration for data transformation.
+    """
     data_transformation_dir: str
     transformed_train_file_path: str
     transformed_test_file_path: str
@@ -74,6 +92,9 @@ class DataTransformationConfig:
 
 @dataclass
 class ModelTrainerConfig:
+    """
+    Configuration for model trainer.
+    """
     model_trainer_dir: str
     trained_model_file_path: str
     expected_accuracy: float
@@ -88,28 +109,34 @@ class ModelTrainerConfig:
         self.trained_model_file_path = os.path.join(
             self.model_trainer_dir, "trained_model", disease_config["model_file_name"]
         )
-        self.expected_accuracy = 0.6  # Example
+        self.expected_accuracy = 0.6  # Example threshold for acceptable model accuracy
         self.model_config_file_path = "config/model.yaml"
-        self._n_estimators = 180
-        self._learning_rate = 0.1
-        self._loss = "exponential"
+        self._n_estimators = 180  # Example value, can be customized
+        self._learning_rate = 0.1  # Example value, can be customized
+        self._loss = "exponential"  # Example loss function, can be customized
 
 
 @dataclass
 class ModelEvaluationConfig:
+    """
+    Configuration for model evaluation.
+    """
     changed_threshold_score: float
     bucket_name: str
     s3_model_key_path: str
 
     def __init__(self, disease_name: str):
         disease_config = DISEASES[disease_name]
-        self.changed_threshold_score = 0.02  # Example
+        self.changed_threshold_score = 0.02  # Example threshold for evaluating model changes
         self.bucket_name = disease_config["model_bucket_name"]
         self.s3_model_key_path = disease_config["model_file_name"]
 
 
 @dataclass
 class ModelPusherConfig:
+    """
+    Configuration for model pusher to upload the model to S3.
+    """
     bucket_name: str
     s3_model_key_path: str
 
@@ -121,6 +148,9 @@ class ModelPusherConfig:
 
 @dataclass
 class DiseasePredictorConfig:
+    """
+    Configuration for the disease predictor, for inference after deployment.
+    """
     model_file_path: str
     model_bucket_name: str
 

@@ -1,0 +1,82 @@
+columns: 
+  - age: int
+  - sex: int
+  - cp: int
+  - trestbps: int
+  - chol: int
+  - fbs: int
+  - restecg: int
+  - thalach: int
+  - exang: int
+  - oldpeak: float
+  - slope: int
+  - ca: int
+  - thal: int
+  - target: int
+
+
+numerical_columns:
+  - age
+  - trestbps
+  - chol
+  - thalach
+  - oldpeak
+  - sex
+  - cp
+  - fbs
+  - restecg
+  - exang
+  - slop
+  - ca
+  - thal
+
+categorical_columns:
+  - target
+
+
+drop_columns: 
+  - _id
+
+# for data transformation
+
+normalizartion_columns:
+
+- trestbps
+- chol
+- thalach
+
+robust_scaler_columns:
+  - Pregnancies
+  - BloodPressure
+  - SkinThickness
+  - DiabetesPedigreeFunction
+  - Age
+  - BMI
+  - Insulin
+  - Glucose
+
+standard_scaler_columns:
+  - Pregnancies
+  - BloodPressure
+  - SkinThickness
+  - DiabetesPedigreeFunction
+  - Age
+  - BMI
+  - Insulin
+  - Glucose
+
+
+columns_to_replace_zeros:
+  - Pregnancies
+  - Glucose
+  - BloodPressure
+  - SkinThickness
+  - Insulin
+  - BMI
+  - DiabetesPedigreeFunction
+  - Age
+
+columns_to_apply_one_hot_encoding:
+  - NewBMI
+  - NewInsulinScore
+  - NewGlucose

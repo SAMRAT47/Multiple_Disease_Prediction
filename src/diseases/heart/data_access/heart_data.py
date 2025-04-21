@@ -48,8 +48,8 @@ class Heart_Data:
             print("Fetching data from mongoDB")
             heart_df = pd.DataFrame(list(collection.find()))
             print(f"Data fecthed with len: {len(heart_df)}")
-            if "id" in heart_df.columns.to_list():
-                heart_df = heart_df.drop(columns=["id"], axis=1)
+            if "_id" in heart_df.columns.to_list():
+                heart_df = heart_df.drop(columns=["_id"], axis=1)
             heart_df.replace({"na":np.nan},inplace=True)
             return heart_df
 
