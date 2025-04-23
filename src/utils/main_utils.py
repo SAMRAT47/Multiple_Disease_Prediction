@@ -9,6 +9,8 @@ from pandas import DataFrame
 from src.exception import MyException
 from src.logger import logging
 
+from src.constants import *
+
 
 def read_yaml_file(file_path: str) -> dict:
     try:
@@ -52,7 +54,8 @@ def save_numpy_array_data(file_path: str, array: np.array):
     """
     try:
         dir_path = os.path.dirname(file_path)
-        os.makedirs(dir_path, exist_ok=True)
+        if dir_path:  # only create if non-empty
+            os.makedirs(dir_path, exist_ok=True)
         with open(file_path, 'wb') as file_obj:
             np.save(file_obj, array)
     except Exception as e:
@@ -72,18 +75,29 @@ def load_numpy_array_data(file_path: str) -> np.array:
         raise MyException(e, sys) from e
 
 
-def save_object(file_path: str, obj: object) -> None:
-    logging.info("Entered the save_object method of utils")
-
+def save_object(file_path, obj):
     try:
+        # Ensure the directory exists before saving the object
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, "wb") as file_obj:
-            dill.dump(obj, file_obj)
-
-        logging.info("Exited the save_object method of utils")
-
+        
+        # Save the object using dill
+        with open(file_path, 'wb') as file:
+            dill.dump(obj, file)
+            
+        logging.info(f"Object saved successfully to {file_path}")
+    
     except Exception as e:
-        raise MyException(e, sys) from e
+        logging.error(f"Error occurred while saving the object: {str(e)}")
+        raise e
+    
+def get_schema_file_path(disease_name: str) -> str:
+    return os.path.join("src", "diseases", disease_name.lower(), "config", "schema.yaml")
+    
+def get_target_column(disease_name: str) -> str:
+    disease_name = disease_name.lower()
+    if disease_name not in DISEASES:
+        raise ValueError(f"No configuration found for disease: {disease_name}")
+    return DISEASES[disease_name]["target_column"]
 
 
 # def drop_columns(df: DataFrame, cols: list)-> DataFrame:

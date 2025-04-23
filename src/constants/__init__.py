@@ -9,12 +9,9 @@ PIPELINE_NAME: str = "multi_disease_pipeline"
 ARTIFACT_DIR: str = "artifact"
 
 MODEL_FILE_NAME = "model.pkl"
-TARGET_COLUMN = "Outcome"
 CURRENT_YEAR = date.today().year
-PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
 
-def get_schema_file_path(disease_name: str) -> str:
-    return os.path.join("src", "diseases", disease_name.lower(), "config", "schema.yaml")
+PREPROCESSING_OBJECT_FILE_NAME = "preprocessing.pkl"
 
 AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
 AWS_SECRET_ACCESS_KEY_ENV_KEY = "AWS_SECRET_ACCESS_KEY"
@@ -29,7 +26,8 @@ DISEASES = {
         "collection_name": "diabetes_data",
         "model_file_name": "diabetes_model.pkl",
         "model_bucket_name": "diabetes-model-bucket",
-        "target_column": "Outcome"
+        "target_column": "Outcome",
+        "preprocessing_object_file_name": f"diabetes_{PREPROCESSING_OBJECT_FILE_NAME}"  # Concatenating the disease name dynamically
     },
     "heart": {
         "file_name": "heart_disease.csv",
@@ -38,7 +36,8 @@ DISEASES = {
         "collection_name": "heart_data",
         "model_file_name": "heart_disease_model.pkl",
         "model_bucket_name": "heart-disease-model-bucket",
-        "target_column": "HeartDiseaseOutcome"
+        "target_column": "target",
+        "preprocessing_object_file_name": f"heart_{PREPROCESSING_OBJECT_FILE_NAME}"  # Concatenating the disease name dynamically
     },
     "kidney": {
         "file_name": "kidney_disease.csv",
@@ -47,9 +46,11 @@ DISEASES = {
         "collection_name": "kidney_data",
         "model_file_name": "kidney_disease_model.pkl",
         "model_bucket_name": "kidney-disease-model-bucket",
-        "target_column": "KidneyDiseaseOutcome"
+        "target_column": "classification",
+        "preprocessing_object_file_name": f"kidney_{PREPROCESSING_OBJECT_FILE_NAME}"  # Concatenating the disease name dynamically
     }
 }
+
 
 # General constants for data ingestion
 DATA_INGESTION_DIR_NAME: str = "data_ingestion"

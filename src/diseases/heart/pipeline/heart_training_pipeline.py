@@ -4,21 +4,22 @@ from src.logger import logging
 
 from src.diseases.heart.components.data_ingestion import DataIngestion
 from src.diseases.heart.components.data_validation import DataValidation
-# from src.diseases.diabetes.components.data_transformation import DataTransformation
+from src.diseases.heart.components.data_transformation import DataTransformation
 # from src.diseases.diabetes.components.model_trainer import ModelTrainer
 # from src.diseases.diabetes.components.model_evaluation import ModelEvaluation
 # from src.diseases.diabetes.components.model_pusher import ModelPusher
 
-from src.entity.config_entity import (DataIngestionConfig,
-                                          DataValidationConfig)
-                                        #   DataTransformationConfig,
-                                        #   ModelTrainerConfig,
-                                        #   ModelEvaluationConfig,
-                                        #   ModelPusherConfig)
+from src.entity.config_entity import *
+# (DataIngestionConfig,
+#                                           DataValidationConfig,
+#                                           DataTransformationConfig)
+#                                         #   ModelTrainerConfig,
+#                                         #   ModelEvaluationConfig,
+#                                         #   ModelPusherConfig)
                                           
 from src.entity.artifact_entity import (DataIngestionArtifact,
-                                            DataValidationArtifact)
-                                            # DataTransformationArtifact,
+                                            DataValidationArtifact,
+                                            DataTransformationArtifact)
                                             # ModelTrainerArtifact,
                                             # ModelEvaluationArtifact,
                                             # ModelPusherArtifact)
@@ -26,11 +27,12 @@ from src.entity.artifact_entity import (DataIngestionArtifact,
 
 
 class HeartTrainPipeline:
-    def __init__(self):
+    def __init__(self, training_pipeline_config): 
         self.disease_name = "heart"
-        self.data_ingestion_config = DataIngestionConfig(disease_name=self.disease_name)
-        self.data_validation_config = DataValidationConfig(disease_name=self.disease_name)
-        # self.data_transformation_config = DataTransformationConfig()
+        self.training_pipeline_config = training_pipeline_config
+        self.data_ingestion_config = DataIngestionConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
+        self.data_validation_config = DataValidationConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
+        self.data_transformation_config = DataTransformationConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
         # self.model_trainer_config = ModelTrainerConfig()
         # self.model_evaluation_config = ModelEvaluationConfig()
         # self.model_pusher_config = ModelPusherConfig()
@@ -72,18 +74,18 @@ class HeartTrainPipeline:
         except Exception as e:
             raise MyException(e, sys) from e
         
-    # def start_data_transformation(self, data_ingestion_artifact: DataIngestionArtifact, data_validation_artifact: DataValidationArtifact) -> DataTransformationArtifact:
-    #     """
-    #     This method of TrainPipeline class is responsible for starting data transformation component
-    #     """
-    #     try:
-    #         data_transformation = DataTransformation(data_ingestion_artifact=data_ingestion_artifact,
-    #                                                  data_transformation_config=self.data_transformation_config,
-    #                                                  data_validation_artifact=data_validation_artifact)
-    #         data_transformation_artifact = data_transformation.initiate_data_transformation()
-    #         return data_transformation_artifact
-    #     except Exception as e:
-    #         raise MyException(e, sys)
+    def start_data_transformation(self, data_ingestion_artifact: DataIngestionArtifact, data_validation_artifact: DataValidationArtifact) -> DataTransformationArtifact:
+        """
+        This method of TrainPipeline class is responsible for starting data transformation component
+        """
+        try:
+            data_transformation = DataTransformation(data_ingestion_artifact=data_ingestion_artifact,
+                                                     data_transformation_config=self.data_transformation_config,
+                                                     data_validation_artifact=data_validation_artifact)
+            data_transformation_artifact = data_transformation.initiate_data_transformation()
+            return data_transformation_artifact
+        except Exception as e:
+            raise MyException(e, sys)
         
     # def start_model_trainer(self, data_transformation_artifact: DataTransformationArtifact) -> ModelTrainerArtifact:
     #     """
@@ -134,8 +136,8 @@ class HeartTrainPipeline:
         try:
             data_ingestion_artifact = self.start_data_ingestion()
             data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
-            # data_transformation_artifact = self.start_data_transformation(
-            #     data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
+            data_transformation_artifact = self.start_data_transformation(
+                data_ingestion_artifact=data_ingestion_artifact, data_validation_artifact=data_validation_artifact)
             # model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
             # model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact,
             #                                                         model_trainer_artifact=model_trainer_artifact)

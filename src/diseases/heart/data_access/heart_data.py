@@ -50,7 +50,7 @@ class Heart_Data:
             print(f"Data fecthed with len: {len(heart_df)}")
             if "_id" in heart_df.columns.to_list():
                 heart_df = heart_df.drop(columns=["_id"], axis=1)
-            heart_df.replace({"na":np.nan},inplace=True)
+            heart_df = heart_df.apply(lambda x: x.replace(0, np.nan) if x.name != "target" else x)
             return heart_df
 
         except Exception as e:

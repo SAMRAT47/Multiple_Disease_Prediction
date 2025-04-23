@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 from src.exception import MyException
 from src.logger import logging
-from src.utils.main_utils import read_yaml_file
+from src.utils.main_utils import read_yaml_file,get_schema_file_path
 from src.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
 from src.entity.config_entity import DataValidationConfig
 from src.constants import *

@@ -26,20 +26,21 @@ from src.logger import logging
 from src.diseases.diabetes.pipeline.diabetes_training_pipeline import DiabetesTrainPipeline
 from src.diseases.heart.pipeline.heart_training_pipeline import HeartTrainPipeline
 from src.diseases.kidney.pipeline.kidney_training_pipeline import KidneyTrainPipeline
+from src.entity.config_entity import training_pipeline_config  # Import the existing configuration
 
 def run_all_pipelines():
     logging.info("Starting Diabetes Pipeline...")
-    diabetes_pipeline = DiabetesTrainPipeline()
+    diabetes_pipeline = DiabetesTrainPipeline(training_pipeline_config=training_pipeline_config)
     diabetes_pipeline.run_pipeline()
     logging.info("Diabetes Pipeline completed.")
 
     logging.info("Starting Heart Disease Pipeline...")
-    heart_pipeline = HeartTrainPipeline()
+    heart_pipeline = HeartTrainPipeline(training_pipeline_config=training_pipeline_config)
     heart_pipeline.run_pipeline()
     logging.info("Heart Disease Pipeline completed.")
 
     logging.info("Starting Kidney Disease Pipeline...")
-    kidney_pipeline = KidneyTrainPipeline()
+    kidney_pipeline = KidneyTrainPipeline(training_pipeline_config=training_pipeline_config)
     kidney_pipeline.run_pipeline()
     logging.info("Kidney Disease Pipeline completed.")
 

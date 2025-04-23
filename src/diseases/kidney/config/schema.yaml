@@ -43,6 +43,7 @@ numerical_columns:
   - pcv
   - wc
   - rc
+  - classification
 
 categorical_columns:
   - rbc
@@ -55,45 +56,102 @@ categorical_columns:
   - appet
   - pe
   - ane
-  - classification
+  
+  
+
+column_value_replacements:
+  dm:
+    "\tno": "no"
+    "\tyes": "yes"
+    " yes": "yes"
+  cad:
+    "\tno": "no"
+  classification:
+    "ckd\t": "ckd"
+    "notckd": "not ckd"
+
+column_value_mappings:
+  cad:
+    'no': 0
+    'yes': 1
+  classification:
+    'ckd': 1
+    'not ckd': 0
+  dm:
+    'no': 0
+    'yes': 1
 
 
 drop_columns: 
   - id
 
-# for data transformation
-robust_scaler_columns:
-  - Pregnancies
-  - BloodPressure
-  - SkinThickness
-  - DiabetesPedigreeFunction
-  - Age
-  - BMI
-  - Insulin
-  - Glucose
+column_renaming_map:
+
+  bp: blood_pressure
+  sg: specific_gravity
+  al: albumin
+  su: sugar
+  rbc: red_blood_cells
+  pc: pus_cell
+  pcc: pus_cell_clumps
+  ba: bacteria
+  bgr: blood_glucose_random
+  bu: blood_urea
+  sc: serum_creatinine
+  sod: sodium
+  pot: potassium
+  hemo: haemoglobin
+  pcv: packed_cell_volume
+  wc: white_blood_cell_count
+  rc: red_blood_cell_count
+  htn: hypertension
+  dm: diabetes_mellitus
+  cad: coronary_artery_diseas
+  appet: appetite
+  pe: peda_edema
+  ane: aanemia
+
+
+
+
+# # for data transformation
+# robust_scaler_columns:
+#   - Pregnancies
+#   - BloodPressure
+#   - SkinThickness
+#   - DiabetesPedigreeFunction
+#   - Age
+#   - BMI
+#   - Insulin
+#   - Glucose
 
 standard_scaler_columns:
-  - Pregnancies
-  - BloodPressure
-  - SkinThickness
-  - DiabetesPedigreeFunction
-  - Age
-  - BMI
-  - Insulin
-  - Glucose
+  - blood_pressure
+  - specific_gravity
+  - albumin
+  - sugar
+  - blood_glucose_random
+  - blood_urea
+  - serum_creatinine
+  - sodium
+  - potassium
+  - haemoglobin
+  - packed_cell_volume
+  - white_blood_cell_count
+  - red_blood_cell_count
 
 
-columns_to_replace_zeros:
-  - Pregnancies
-  - Glucose
-  - BloodPressure
-  - SkinThickness
-  - Insulin
-  - BMI
-  - DiabetesPedigreeFunction
-  - Age
+# columns_to_replace_zeros:
+#   - Pregnancies
+#   - Glucose
+#   - BloodPressure
+#   - SkinThickness
+#   - Insulin
+#   - BMI
+#   - DiabetesPedigreeFunction
+#   - Age
 
-columns_to_apply_one_hot_encoding:
-  - NewBMI
-  - NewInsulinScore
-  - NewGlucose
+# columns_to_apply_one_hot_encoding:
+#   - NewBMI
+#   - NewInsulinScore
+#   - NewGlucose

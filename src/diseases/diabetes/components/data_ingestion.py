@@ -8,6 +8,7 @@ from src.entity.config_entity import DataIngestionConfig
 from src.entity.artifact_entity import DataIngestionArtifact
 from src.exception import MyException
 from src.logger import logging
+
 from src.diseases.diabetes.data_access.diabetes_data import Diabetes_Data
 
 class DataIngestion:

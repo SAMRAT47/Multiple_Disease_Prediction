@@ -26,7 +26,7 @@ numerical_columns:
   - fbs
   - restecg
   - exang
-  - slop
+  - slope
   - ca
   - thal
 
@@ -39,31 +39,29 @@ drop_columns:
 
 # for data transformation
 
-normalizartion_columns:
+normalization_columns:
 
-- trestbps
-- chol
-- thalach
+  - trestbps
+  - chol
+  - thalach
 
-robust_scaler_columns:
-  - Pregnancies
-  - BloodPressure
-  - SkinThickness
-  - DiabetesPedigreeFunction
-  - Age
-  - BMI
-  - Insulin
-  - Glucose
+# robust_scaler_columns:
+#   - Pregnancies
+#   - BloodPressure
+#   - SkinThickness
+#   - DiabetesPedigreeFunction
+#   - Age
+#   - BMI
+#   - Insulin
+#   - Glucose
 
 standard_scaler_columns:
-  - Pregnancies
-  - BloodPressure
-  - SkinThickness
-  - DiabetesPedigreeFunction
-  - Age
-  - BMI
-  - Insulin
-  - Glucose
+  - age
+  - trestbps
+  - chol
+  - thalach
+  - oldpeak
+
 
 
 columns_to_replace_zeros:

@@ -50,7 +50,7 @@ class Kidney_Data:
             print(f"Data fecthed with len: {len(kidney_df)}")
             if "_id" in kidney_df.columns.to_list():
                 kidney_df = kidney_df.drop(columns=["_id"], axis=1)
-            kidney_df.replace({"na":np.nan},inplace=True)
+            kidney_df = kidney_df.apply(lambda x: x.replace(0, np.nan) if x.name != "classification" else x)
             return kidney_df
 
         except Exception as e:

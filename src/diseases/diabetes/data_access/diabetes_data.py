@@ -50,7 +50,7 @@ class Diabetes_Data:
             print(f"Data fecthed with len: {len(diabetes_df)}")
             if "_id" in diabetes_df.columns.to_list():
                 diabetes_df = diabetes_df.drop(columns=["_id"], axis=1)
-            diabetes_df.replace({0:np.nan},inplace=True)
+            diabetes_df = diabetes_df.apply(lambda x: x.replace(0, np.nan) if x.name != "Outcome" else x)
             return diabetes_df
 
         except Exception as e:
