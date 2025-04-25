@@ -190,7 +190,7 @@ class DataTransformation:
             os.makedirs(os.path.dirname(preprocessing_object_path), exist_ok=True)
             save_object(preprocessing_object_path, preprocessor)
 
-            return final_pipeline
+            return final_pipeline,preprocessing_object_path
 
         except Exception as e:
             logging.exception("Exception in get_data_transformer_object")
@@ -269,7 +269,7 @@ class DataTransformation:
             target_feature_test_df = test_kidney_df[self.target_column]
 
             # Get preprocessing pipeline
-            preprocessor = self.get_data_transformer_object()
+            preprocessor,preprocessing_object_path = self.get_data_transformer_object()
             
             # Apply preprocessing
             input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
@@ -302,9 +302,9 @@ class DataTransformation:
 
             logging.info(f"Data transformation completed for {self.disease_name} disease successfully")
             return DataTransformationArtifact(
-                transformed_object_file_path=self.data_transformation_config.transformed_object_file_path,
                 transformed_train_file_path=self.data_transformation_config.transformed_train_file_path,
                 transformed_test_file_path=self.data_transformation_config.transformed_test_file_path,
+                preprocessed_object_file_path=preprocessing_object_path,
                 disease_name=self.disease_name
             )
 

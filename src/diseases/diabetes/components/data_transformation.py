@@ -14,7 +14,6 @@ from src.entity.config_entity import DataTransformationConfig
 from src.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
 from src.constants import *
 
-
 class DataTransformation:
     def __init__(self, data_ingestion_artifact: DataIngestionArtifact,
                  data_transformation_config: DataTransformationConfig,
@@ -69,10 +68,13 @@ class DataTransformation:
             if self.target_column not in diabetes_df.columns:
                 raise Exception(f"{self.target_column} not found in dataframe for class-based imputation.")
 
+            logging.info(f"Columns in the dataframe before imputation: {diabetes_df.columns}")  # Logging columns
+
             for col in numeric_cols:
                 if col != self.target_column and diabetes_df[col].isnull().sum() > 0:
                     diabetes_df[col] = diabetes_df.groupby(self.target_column)[col].transform(lambda x: x.fillna(x.mean()))
 
+            logging.info(f"Columns after imputation: {diabetes_df.columns}")  # Logging columns after imputation
             return diabetes_df
         except Exception as e:
             raise MyException(e, sys)
@@ -98,6 +100,7 @@ class DataTransformation:
                 diabetes_df[col] = np.where(diabetes_df[col] < lower_bound, Q1, diabetes_df[col])
                 diabetes_df[col] = np.where(diabetes_df[col] > upper_bound, Q3, diabetes_df[col])
 
+            logging.info(f"Columns after outlier imputation: {diabetes_df.columns}")  # Logging columns after imputation
             return diabetes_df
 
         except Exception as e:
@@ -126,7 +129,7 @@ class DataTransformation:
             elif self.disease_name == "kidney":
                 logging.info("Feature engineering skipped for kidney disease.")
 
-            logging.info("Feature engineering done.")
+            logging.info(f"Columns after feature engineering: {diabetes_df.columns}")  # Logging columns after engineering
             return diabetes_df
 
     def get_data_transformer_object(self) -> Pipeline:
@@ -149,7 +152,7 @@ class DataTransformation:
 
             # Creating preprocessor pipeline
             preprocessor = ColumnTransformer(
-                transformers=[
+                transformers=[ 
                     ("RobustScaler", robust_scaler, robust_scaler_columns),
                     ("StandardScaler", standard_scaler, standard_scaler_columns),
                     ("OneHotEncoder", one_hot_encoder, ohe_columns)
@@ -175,7 +178,7 @@ class DataTransformation:
             # Now save to the full path
             save_object(preprocessing_object_path, preprocessor)
 
-            return final_pipeline
+            return final_pipeline,preprocessing_object_path
 
         except Exception as e:
             logging.exception("Exception occurred in get_data_transformer_object")
@@ -191,6 +194,9 @@ class DataTransformation:
             # Load train and test data
             train_df = self.read_data(self.data_ingestion_artifact.trained_file_path)
             test_df = self.read_data(self.data_ingestion_artifact.test_file_path)
+
+            logging.info(f"Columns in train_df: {train_df.columns}")  # Check columns in train data
+            logging.info(f"Columns in test_df: {test_df.columns}")  # Check columns in test data
 
             # Replace zeros
             train_df = self._replace_zeros(train_df)
@@ -208,15 +214,18 @@ class DataTransformation:
             train_df = self._feature_engineering(train_df)
             test_df = self._feature_engineering(test_df)
 
-            # Split features and target
+            logging.info(f"Columns after feature engineering: {train_df.columns}")  # Check columns after feature engineering
+
             input_feature_train_df = train_df.drop(columns=[self.target_column], axis=1)
             target_feature_train_df = train_df[self.target_column]
 
             input_feature_test_df = test_df.drop(columns=[self.target_column], axis=1)
             target_feature_test_df = test_df[self.target_column]
 
-            # Apply transformations
-            preprocessor = self.get_data_transformer_object()
+            # Set sample df for column validation in transformer
+            self.diabetes_df = input_feature_train_df
+
+            preprocessor,preprocessing_object_path = self.get_data_transformer_object()
             input_feature_train_arr = preprocessor.fit_transform(input_feature_train_df)
             input_feature_test_arr = preprocessor.transform(input_feature_test_df)
 
@@ -234,23 +243,20 @@ class DataTransformation:
             test_arr = np.c_[input_feature_test_final, np.array(target_feature_test_final)]
             logging.info("feature-target concatenation done for train-test df.")
 
-            # Ensure directories exist before saving files
             self._ensure_dir(self.data_transformation_config.transformed_train_file_path)
             self._ensure_dir(self.data_transformation_config.transformed_test_file_path)
             self._ensure_dir(self.data_transformation_config.transformed_object_file_path)
 
-            # Save transformed data
             save_numpy_array_data(self.data_transformation_config.transformed_train_file_path, array=train_arr)
             save_numpy_array_data(self.data_transformation_config.transformed_test_file_path, array=test_arr)
-            logging.info("Saving transformation object and transformed files.")
 
-            logging.info(f"Data transformation completed for {self.disease_name} successfully")
+            logging.info("Data transformation completed successfully")
             return DataTransformationArtifact(
-                transformed_object_file_path=self.data_transformation_config.transformed_object_file_path,
                 transformed_train_file_path=self.data_transformation_config.transformed_train_file_path,
                 transformed_test_file_path=self.data_transformation_config.transformed_test_file_path,
-                disease_name=self.disease_name 
-            )
+                preprocessed_object_file_path=preprocessing_object_path,
+                disease_name=self.disease_name
+                        )
 
         except Exception as e:
             raise MyException(e, sys) from e

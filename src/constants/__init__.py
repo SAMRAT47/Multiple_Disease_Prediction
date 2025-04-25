@@ -17,7 +17,7 @@ AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
 AWS_SECRET_ACCESS_KEY_ENV_KEY = "AWS_SECRET_ACCESS_KEY"
 REGION_NAME = "us-east-1"
 
-# Example disease configurations (can be extended for other diseases)
+# Example disease configurations with algorithm and hyperparameters
 DISEASES = {
     "diabetes": {
         "file_name": "diabetes.csv",
@@ -27,7 +27,13 @@ DISEASES = {
         "model_file_name": "diabetes_model.pkl",
         "model_bucket_name": "diabetes-model-bucket",
         "target_column": "Outcome",
-        "preprocessing_object_file_name": f"diabetes_{PREPROCESSING_OBJECT_FILE_NAME}"  # Concatenating the disease name dynamically
+        "preprocessing_object_file_name": f"diabetes_{PREPROCESSING_OBJECT_FILE_NAME}",
+        "algorithm": "gradient_boosting",
+        "hyperparameters": {
+            "n_estimators": 180,
+            "learning_rate": 0.1,
+            "loss": "exponential"
+        }
     },
     "heart": {
         "file_name": "heart_disease.csv",
@@ -37,7 +43,16 @@ DISEASES = {
         "model_file_name": "heart_disease_model.pkl",
         "model_bucket_name": "heart-disease-model-bucket",
         "target_column": "target",
-        "preprocessing_object_file_name": f"heart_{PREPROCESSING_OBJECT_FILE_NAME}"  # Concatenating the disease name dynamically
+        "preprocessing_object_file_name": f"heart_{PREPROCESSING_OBJECT_FILE_NAME}",
+        "algorithm": "random_forest",
+        "hyperparameters": {
+            "criterion": 'gini',
+            "n_estimators": 180,
+            "max_depth": 7,
+            "max_features": "sqrt",
+            "min_samples_leaf": 2,
+            "min_samples_split" : 4
+        }
     },
     "kidney": {
         "file_name": "kidney_disease.csv",
@@ -47,10 +62,15 @@ DISEASES = {
         "model_file_name": "kidney_disease_model.pkl",
         "model_bucket_name": "kidney-disease-model-bucket",
         "target_column": "classification",
-        "preprocessing_object_file_name": f"kidney_{PREPROCESSING_OBJECT_FILE_NAME}"  # Concatenating the disease name dynamically
+        "preprocessing_object_file_name": f"kidney_{PREPROCESSING_OBJECT_FILE_NAME}",
+        "algorithm": "gradient_boosting",
+        "hyperparameters": {
+            "n_estimators": 180,
+            "learning_rate": 0.1,
+            "loss": "exponential"
+        }
     }
 }
-
 
 # General constants for data ingestion
 DATA_INGESTION_DIR_NAME: str = "data_ingestion"
@@ -79,7 +99,7 @@ LEARNING_RATE: float = 0.1
 
 # Model Evaluation related constants
 MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
-MODEL_BUCKET_NAME = "my-mlops-project"
+MODEL_BUCKET_NAME = "my-mlopsproj1"
 MODEL_PUSHER_S3_KEY = "model-registry"
 
 # Application settings
