@@ -7,21 +7,21 @@ from src.diseases.kidney.components.data_validation import DataValidation
 from src.diseases.kidney.components.data_transformation import DataTransformation
 from src.diseases.diabetes.components.model_trainer import ModelTrainer
 from src.diseases.diabetes.components.model_evaluation import ModelEvaluation
-# from src.diseases.diabetes.components.model_pusher import ModelPusher
+from src.diseases.diabetes.components.model_pusher import ModelPusher
 
 from src.entity.config_entity import (DataIngestionConfig,
                                           DataValidationConfig,
                                           DataTransformationConfig,
                                           ModelTrainerConfig,
-                                          ModelEvaluationConfig)
-#                                         #   ModelPusherConfig)
+                                          ModelEvaluationConfig,
+                                          ModelPusherConfig)
                                           
 from src.entity.artifact_entity import (DataIngestionArtifact,
                                             DataValidationArtifact,
                                             DataTransformationArtifact,
                                             ModelTrainerArtifact,
-                                            ModelEvaluationArtifact)
-                                            # ModelPusherArtifact)
+                                            ModelEvaluationArtifact,
+                                            ModelPusherArtifact)
 
 
 
@@ -34,7 +34,7 @@ class KidneyTrainPipeline:
         self.data_transformation_config = DataTransformationConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
         self.model_trainer_config = ModelTrainerConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
         self.model_evaluation_config = ModelEvaluationConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
-        # self.model_pusher_config = ModelPusherConfig()
+        self.model_pusher_config = ModelPusherConfig(disease_name=self.disease_name, training_pipeline_config=self.training_pipeline_config)
 
 
     
@@ -114,18 +114,18 @@ class KidneyTrainPipeline:
         except Exception as e:
             raise MyException(e, sys)
 
-    # def start_model_pusher(self, model_evaluation_artifact: ModelEvaluationArtifact) -> ModelPusherArtifact:
-    #     """
-    #     This method of TrainPipeline class is responsible for starting model pushing
-    #     """
-    #     try:
-    #         model_pusher = ModelPusher(model_evaluation_artifact=model_evaluation_artifact,
-    #                                    model_pusher_config=self.model_pusher_config
-    #                                    )
-    #         model_pusher_artifact = model_pusher.initiate_model_pusher()
-    #         return model_pusher_artifact
-    #     except Exception as e:
-    #         raise MyException(e, sys)
+    def start_model_pusher(self, model_evaluation_artifact: ModelEvaluationArtifact) -> ModelPusherArtifact:
+        """
+        This method of TrainPipeline class is responsible for starting model pushing
+        """
+        try:
+            model_pusher = ModelPusher(model_evaluation_artifact=model_evaluation_artifact,
+                                       model_pusher_config=self.model_pusher_config,disease_name=self.disease_name
+                                       )
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            return model_pusher_artifact
+        except Exception as e:
+            raise MyException(e, sys)
         
         
     def run_pipeline(self, ) -> None:
@@ -143,7 +143,7 @@ class KidneyTrainPipeline:
             if not model_evaluation_artifact.is_model_accepted:
                 logging.info(f"Model not accepted.")
                 return None
-            # model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evaluation_artifact)
+            model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact=model_evaluation_artifact)
             
         except Exception as e:
             raise MyException(e, sys)

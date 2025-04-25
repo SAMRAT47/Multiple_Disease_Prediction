@@ -86,11 +86,12 @@ class ModelTrainerConfig:
 
 @dataclass
 class ModelEvaluationConfig:
-    changed_threshold_score: float
-    bucket_name: str
-    s3_model_key_path: str
     disease_name: str
-    training_pipeline_config: any  # Add this line if required
+    training_pipeline_config: any
+    changed_threshold_score: float = MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE
+    bucket_name: str = MODEL_BUCKET_NAME
+    s3_model_key_path: str = MODEL_PUSHER_S3_KEY
+    
 
     def __init__(self, disease_name: str, training_pipeline_config=None):
         disease_config = DISEASES[disease_name]
@@ -102,12 +103,19 @@ class ModelEvaluationConfig:
 
 @dataclass
 class ModelPusherConfig:
-    bucket_name: str
-    s3_model_key_path: str
+    disease_name: str
+    training_pipeline_config: TrainingPipelineConfig  # ← Add this
+    changed_threshold_score: float = MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE
+    bucket_name: str = MODEL_BUCKET_NAME
+    s3_model_key_path: str = MODEL_PUSHER_S3_KEY
 
-    def __init__(self, disease_name: str):
-        disease_config = DISEASES[disease_name]
-        self.bucket_name = disease_config["model_bucket_name"]
+    def __post_init__(self):
+        if not self.disease_name:
+            raise ValueError("disease_name must be provided.")
+        disease_config = DISEASES.get(self.disease_name)
+        if disease_config is None:
+            raise ValueError(f"Configuration for disease '{self.disease_name}' not found.")
+        self.bucket_name = MODEL_BUCKET_NAME
         self.s3_model_key_path = disease_config["model_file_name"]
 
 @dataclass
@@ -118,4 +126,4 @@ class DiseasePredictorConfig:
     def __init__(self, disease_name: str):
         disease_config = DISEASES[disease_name]
         self.model_file_path = disease_config["model_file_name"]
-        self.model_bucket_name = disease_config["model_bucket_name"]
+        self.bucket_name = MODEL_BUCKET_NAME
