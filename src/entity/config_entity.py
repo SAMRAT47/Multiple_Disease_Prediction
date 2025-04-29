@@ -120,10 +120,12 @@ class ModelPusherConfig:
 
 @dataclass
 class DiseasePredictorConfig:
-    model_file_path: str
-    model_bucket_name: str
+    disease_name: str
+    model_file_path: str = ""
+    bucket_name: str = MODEL_BUCKET_NAME
 
-    def __init__(self, disease_name: str):
-        disease_config = DISEASES[disease_name]
+    def __post_init__(self):
+        disease_config = DISEASES[self.disease_name]
         self.model_file_path = disease_config["model_file_name"]
-        self.bucket_name = MODEL_BUCKET_NAME
+
+
