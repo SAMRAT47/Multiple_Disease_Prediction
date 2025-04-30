@@ -66,7 +66,7 @@ Model Inference: Python-based modular backend pipelines
 CI: Manual or shell-scripted via Git/GitHub
 
 🌐 Live Application
-App URL: https://diabetespredictionmlopsproject-gyupmbyqqvr7exjhmwvyh7.streamlit.app/
+App URL: https://multiplediseaseprediction-hqk3jm7dxz4qehqshkqscj.streamlit.app/
 
 🖼️ Screenshot of the deployed application:
 
